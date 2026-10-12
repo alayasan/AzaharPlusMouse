@@ -464,13 +464,13 @@ void RoomMember::RoomMemberImpl::HandleAzaharPlusPecificPacket(const ENetEvent* 
 				efile.Close();
 				
 				if(tocopy > 0 && tocopy < 1000000) {
-					Packet response;
-					response << static_cast<u8>(idAzaharPlusSpecific);
-					response << static_cast<u8>(IdZipPassUpload);
-					response << static_cast<u32>(azaharplus_network_version);
-					response << static_cast<u32>(tocopy);
-					response.Append(buffer, tocopy);
-					Send(std::move(response));
+					Packet packet;
+					packet << static_cast<u8>(idAzaharPlusSpecific);
+					packet << static_cast<u8>(IdZipPassUpload);
+					packet << static_cast<u32>(azaharplus_network_version);
+					packet << static_cast<u32>(tocopy);
+					packet.Append(buffer, tocopy);
+					Send(std::move(packet));
 				}
 				
 				delete[] buffer;
@@ -528,7 +528,7 @@ void RoomMember::RoomMemberImpl::HandleAzaharPlusPecificPacket(const ENetEvent* 
 					}
 
 					FileUtil::IOFile dfile(path, "wb");
-					[[maybe_unused]] int written = (int)dfile.WriteBytes(
+					int written = (int)dfile.WriteBytes(
 						event->packet->data + 2*sizeof(u8) + 2*sizeof(u32) + nicknameLength, 
 						dataSize);
 					dfile.Close();
